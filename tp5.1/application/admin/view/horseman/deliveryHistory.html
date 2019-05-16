@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">  
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/vue.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<style type="text/css">
+        table tr th {
+            text-align: center;
+        }
+    </style>
+	<title>Document</title>
+</head>
+<body>
+	<div id="table">
+		<div class="return-title">
+				<ul class="breadcrumb breadcrumb-s" >
+					<li><a class="rider" data-id="rider">骑手管理</a></li>
+					<li class="active">配送历史</li>
+				</ul>
+				<div class="search-box">
+					<div class="input-group input-change">
+			            <input type="text" class="form-control" placeholder="请输入搜索内容" v-model="searchVal">
+			            <span class="input-group-btn">
+	                        <button class="btn btn-default" type="button">搜索</button>
+	                    </span>
+			        </div>
+				</div>
+		</div>
+				  
+		<table class="table table-change table-bordered table-hover table-striped">
+			<thead>
+				<tr>
+					<th>配送id</th>
+					<th>来源地</th>
+					<th>目的地</th>
+					<th>接单时间</th>
+					<th>完成时间</th>
+					<th>状态</th>
+				</tr>
+			</thead>
+			<tbody>
+				 <template v-for="(item,index) in list">
+					<tr v-if="index>=(curpage-1)*pagesize&&index<curpage*pagesize">
+						<th>{{item.id}}</th>
+						<th>{{item.origin}}</th>
+						<th>{{item.destination}}</th>
+						<th>{{item.startTime}}</th>
+						<th>{{item.endTime}}</th>
+						<th>{{item.status}}</th>
+					</tr>
+				</template>
+			</tbody>
+		</table>
+
+		<nav class="paginationNav">
+            <ul class="pagination pagination-xl">
+                <template v-for="page in Math.ceil(list.length/pagesize)">
+                    <li v-on:click="PrePage()" id="prepage" v-if="page==1" class="disabled"><a href="#">上一页</a></li>
+                    <li v-if="page==1" class="active" v-on:click="NumPage(page, $event)"><a href="#">{{page}}</a></li>
+                    <li v-else v-on:click="NumPage(page, $event)"><a href="#">{{page}}</a></li>
+                    <li id="nextpage" v-on:click="NextPage()" v-if="page==Math.ceil(list.length/pagesize)"><a href="#">下一页</a></li>
+                </template>
+            </ul>
+        </nav>
+	</div>
+
+
+<script>
+    $(function() {
+        $(".rider").on("click", function() {
+            var sId = $(this).data("id"); //获取data-id的值
+            window.location.hash = sId; //设置锚点
+            loadInner();
+        });
+ 
+        function loadInner() {
+            var sId = window.location.hash;
+            var pathn, i;
+            switch(sId) {
+                case "#return":
+                    pathn = "riderManagement.html";
+                    i = 0;
+                    break;
+                default:
+                    pathn = "riderManagement.html";
+                    i = 0;
+                    break;
+            }
+            $("#table").load(pathn); //加载相对应的内容
+        }
+        var sId = window.location.hash;
+        // loadInner();
+    });
+</script>
+<script type="text/javascript">
+	var app = new Vue({
+		el:"#table",
+		data:{
+		    editlist: false,
+		    editDetail: {},
+		    searchVal:'',
+		    pagesize: 5,
+            curpage:1,
+		    newList:[
+			    {
+			    	id:'01254',
+			    	startTime:'2019.04.20 15:20:43',
+			    	endTime:'2019.04.20 15:42:19',
+			    	origin:'柳北区',
+			    	destination:'鱼峰区',
+			    	status:'已完成',
+			    },{
+			    	id:'21268',
+			    	startTime:'2019.04.21 10:10:34',
+			    	endTime:'2019.04.21 10:34:02',
+			    	origin:'柳北区',
+			    	destination:'鱼峰区',
+			    	status:'待接单',
+			    },{
+			    	id:'21268',
+			    	startTime:'2019.04.21 10:10:34',
+			    	endTime:'2019.04.21 10:34:02',
+			    	origin:'柳北区',
+			    	destination:'鱼峰区',
+			    	status:'待取货',
+			    },{
+			    	id:'21268',
+			    	startTime:'2019.04.21 10:10:34',
+			    	endTime:'2019.04.21 10:34:02',
+			    	origin:'柳北区',
+			    	destination:'鱼峰区',
+			    	status:'配送中',
+			    },{
+			    	id:'21268',
+			    	startTime:'2019.04.21 10:10:34',
+			    	endTime:'2019.04.21 10:34:02',
+			    	origin:'柳北区',
+			    	destination:'鱼峰区',
+			    	status:'已完成',
+			    },{
+			    	id:'21268',
+			    	startTime:'2019.04.21 10:10:34',
+			    	endTime:'2019.04.21 10:34:02',
+			    	origin:'柳北区',
+			    	destination:'鱼峰区',
+			    	status:'配送中',
+			    },{
+			    	id:'21268',
+			    	startTime:'2019.04.21 10:10:34',
+			    	endTime:'2019.04.21 10:34:02',
+			    	origin:'柳北区',
+			    	destination:'鱼峰区',
+			    	status:'待取货',
+			    },
+			],
+		    editid:''
+		},
+		methods: {
+		    PrePage: function (event) 
+            {
+                $(".pagination .active").prev().trigger("click");
+            },
+            //下一页方法
+            NextPage: function (event) {
+                $(".pagination .active").next().trigger("click");
+            },
+            //点击页码的方法
+            NumPage: function (num, event) {
+                if (this.curpage == num) {
+                    return;
+                }
+                this.curpage = num;
+                $(".pagination li").removeClass("active");
+                if (event.target.tagName.toUpperCase() == "LI") {
+                    $(event.target).addClass("active");
+                }
+                else {
+                    $(event.target).parent().addClass("active");
+                }
+                if (this.curpage == 1) {
+                    $("#prepage").addClass("disabled");
+                }
+                else {
+                    $("#prepage").removeClass("disabled");
+                }
+                if (this.curpage == Math.ceil(this.list.length / this.pagesize)) {
+                    $("#nextpage").addClass("disabled");
+                }
+                else {
+                    $("#nextpage").removeClass("disabled");
+                }
+            }
+	    },
+	    computed:{
+	      list: function(){
+	        var _this = this;
+	        var arrByZM = [];
+	        for (var i=0;i<this.newList.length;i++){
+	        if(this.newList[i].id.search(this.searchVal) != -1){
+	        arrByZM.push(this.newList[i]);
+	        }
+	      }
+	      return arrByZM;
+	      }
+	  	},
+	    ready:function(){
+           var s = JSON.stringify(this.newList);
+           console.log(JSON.parse(s))
+        }
+	})
+</script>
+</body>
+</html>
