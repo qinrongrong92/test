@@ -7,7 +7,7 @@ class Index extends Common
 {
     public function index()
     { 
-    
+    	exit('!!!');
         $area = Db::name('areainfo')->select();
       	$this->assign ('area', $area);  
         return $this->fetch('test');
